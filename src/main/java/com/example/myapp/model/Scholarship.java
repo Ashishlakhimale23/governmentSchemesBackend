@@ -7,6 +7,7 @@ import org.hibernate.type.SqlTypes;
 
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "scholarships")
@@ -56,6 +57,11 @@ public class Scholarship {
     @Column(columnDefinition = "jsonb")
     private List<Map<String, String>> faqs;
 
+    @OneToMany(mappedBy = "scholarship", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BookMark> bookmarks = new ArrayList<>();
+
+    // Add helper method
+    
     // Constructors
     public Scholarship() {}
 
@@ -80,6 +86,15 @@ public class Scholarship {
     }
 
     // Getters and Setters
+    public void addBookmark(BookMark bookmark) {
+        bookmarks.add(bookmark);
+        bookmark.setScholarship(this);
+    }
+
+    public void removeBookmark(BookMark bookmark) {
+        bookmarks.remove(bookmark);
+        bookmark.setScholarship(null);
+    }
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getTitle() { return title; }
